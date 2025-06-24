@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Peta Wilayah Kabupaten Polewali Mandar</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h2>Peta Wilayah Kecamatan di Kabupaten Polewali Mandar</h2>
+  <div id="map"></div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    var map = L.map('map').setView([-3.4, 119.3], 9); // Koordinat pusat Polewali Mandar
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    fetch('polman_kecamatan.geojson')
+      .then(res => res.json())
+      .then(data => {
+        L.geoJSON(data, {
+          style: {
+            color: '#3388ff',
+            weight: 2,
+            fillOpacity: 0.3
+          },
+          onEachFeature: function (feature, layer) {
+            const nama = feature.properties.kecamatan || feature.properties.NAMOBJ;
+            layer.bindPopup("Kecamatan: <strong>" + nama + "</strong>");
+          }
+        }).addTo(map);
+      });
+  </script>
+</body>
+</html>
